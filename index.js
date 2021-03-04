@@ -86,7 +86,34 @@ const buildGraphFromEdges = (edges) => {
  * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
  */
 const bfs = (begin, end, graph) => {
-  
+  const visited = {}
+  const frontier = [begin]
+  const history = {
+    frontiers: [],
+    visited: [],
+    nodeHistory: []
+  }
+
+  while (frontier.length > 0) {
+    history.frontiers.push(JSON.parse(JSON.stringify(frontier)))
+    history.visited.push(JSON.parse(JSON.stringify(visited)))
+
+    const node = frontier.shift()
+    visited[node] = 2
+
+    history.nodeHistory.push(node)
+    
+    if (node === end) {
+      break
+    }
+
+    graph[node].filter((edge) => !visited[edge[0]]).forEach((edge) => {
+      visited[edge[0]] = 1
+      frontier.push(edge[0])
+    })
+  }
+
+  return history
 }
 
 /**
@@ -119,9 +146,17 @@ const ucs = (begin, end, graph) => {
  * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
  * @param {{string: number}} costs A lista de custo heurístico de cada nó.
  */
-const ucs = (begin, end, graph, costs) => {
+const aStar = (begin, end, graph, costs) => {
 
 }
 
-const graph = buildGraphFromEdges(edges)
-console.log(JSON.stringify(graph))
+
+const testSearch = () => {
+  const graph = buildGraphFromEdges(edges)
+  // console.log(graph)
+  
+  const bfsHistory = bfs('RIACHO_DAS_ALMAS', 'VITORIA_DE_SANTO_ANTAO', graph)
+  console.log(bfsHistory)
+}
+
+testSearch()
