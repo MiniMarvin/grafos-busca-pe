@@ -53,6 +53,11 @@ const costs = {
 	'OLINDA': 128,
 }
 
+/**
+ * Constrói uma lista de adjacência com base em arestas do tipo [string, string, int].
+ * 
+ * @param {any[]} edges Arestas do grafo com os pesos.
+ */
 const buildGraphFromEdges = (edges) => {
   const graph = {}
   
@@ -71,6 +76,51 @@ const buildGraphFromEdges = (edges) => {
   })
 
   return graph
+}
+
+/**
+ * Realiza uma busca em largura sobre um grafo.
+ * 
+ * @param {string} begin O nó de inicio da busca.
+ * @param {string} end O nó de fim da busca.
+ * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
+ */
+const bfs = (begin, end, graph) => {
+  
+}
+
+/**
+ * Realiza uma busca em profundidade sobre um grafo.
+ * 
+ * @param {string} begin O nó de inicio da busca.
+ * @param {string} end O nó de fim da busca.
+ * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
+ */
+const dfs = (begin, end, graph) => {
+  
+}
+
+/**
+ * Realiza uma busca de custo uniforme (djikstra) sobre um grafo.
+ * 
+ * @param {string} begin O nó de inicio da busca.
+ * @param {string} end O nó de fim da busca.
+ * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
+ */
+const ucs = (begin, end, graph) => {
+  
+}
+
+/**
+ * Realiza uma busca em A* sobre um grafo.
+ * 
+ * @param {string} begin O nó de inicio da busca.
+ * @param {string} end O nó de fim da busca.
+ * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
+ * @param {{string: number}} graph A lista de custo heurístico de cada nó.
+ */
+const ucs = (begin, end, graph, costs) => {
+
 }
 
 const graph = buildGraphFromEdges(edges)
