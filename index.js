@@ -117,7 +117,7 @@ const ucs = (begin, end, graph) => {
  * @param {string} begin O nó de inicio da busca.
  * @param {string} end O nó de fim da busca.
  * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
- * @param {{string: number}} graph A lista de custo heurístico de cada nó.
+ * @param {{string: number}} costs A lista de custo heurístico de cada nó.
  */
 const ucs = (begin, end, graph, costs) => {
 
