@@ -87,29 +87,32 @@ const buildGraphFromEdges = (edges) => {
  */
 const bfs = (begin, end, graph) => {
   const visited = {}
-  const frontier = [begin]
+  const frontier = [[begin, [begin]]]
   const history = {
     frontiers: [],
     visited: [],
-    nodeHistory: []
+    nodeHistory: [],
+    finalPath: []
   }
 
   while (frontier.length > 0) {
-    history.frontiers.push(JSON.parse(JSON.stringify(frontier)))
+    history.frontiers.push(JSON.parse(JSON.stringify(frontier.map(pair => pair[0]))))
     history.visited.push(JSON.parse(JSON.stringify(visited)))
 
-    const node = frontier.shift()
+    const pair = frontier.shift()
+    const node = pair[0]
     visited[node] = 2
 
     history.nodeHistory.push(node)
     
     if (node === end) {
+      history.finalPath = pair[1]
       break
     }
 
     graph[node].filter((edge) => !visited[edge[0]]).forEach((edge) => {
       visited[edge[0]] = 1
-      frontier.push(edge[0])
+      frontier.push([edge[0], [...pair[1], edge[0]]])
     })
   }
 
@@ -125,29 +128,32 @@ const bfs = (begin, end, graph) => {
  */
 const dfs = (begin, end, graph) => {
   const visited = {}
-  const frontier = [begin]
+  const frontier = [[begin, [begin]]]
   const history = {
     frontiers: [],
     visited: [],
-    nodeHistory: []
+    nodeHistory: [],
+    finalPath: []
   }
 
   while (frontier.length > 0) {
-    history.frontiers.push(JSON.parse(JSON.stringify(frontier)))
+    history.frontiers.push(JSON.parse(JSON.stringify(frontier.map(pair => pair[0]))))
     history.visited.push(JSON.parse(JSON.stringify(visited)))
 
-    const node = frontier.pop()
+    const pair = frontier.pop()
+    const node = pair[0]
     visited[node] = 2
 
     history.nodeHistory.push(node)
     
     if (node === end) {
+      history.finalPath = pair[1]
       break
     }
 
     graph[node].filter((edge) => !visited[edge[0]]).forEach((edge) => {
       visited[edge[0]] = 1
-      frontier.push(edge[0])
+      frontier.push([edge[0], [...pair[1], edge[0]]])
     })
   }
 
@@ -163,24 +169,27 @@ const dfs = (begin, end, graph) => {
  */
 const ucs = (begin, end, graph) => {
   const visited = {}
-  const frontier = new PriorityQueue((node1, node2) => node1[1] < node2[1])
-  frontier.insert([begin, 0])
+  const frontier = new PriorityQueue((node1, node2) => node1[0][1] < node2[0][1])
+  frontier.insert([[begin, 0], [[begin, 0]]])
   const history = {
     frontiers: [],
     visited: [],
-    nodeHistory: []
+    nodeHistory: [],
+    finalPath: []
   }
 
   visited[begin] = 0
 
   while (!frontier.empty()) {
-    history.frontiers.push(JSON.parse(JSON.stringify(frontier.heap.slice(1))))
+    history.frontiers.push(JSON.parse(JSON.stringify(frontier.heap.slice(1).map(pair => pair[0]))))
     history.visited.push(JSON.parse(JSON.stringify(visited)))
 
-    const node = frontier.remove()
+    const pair = frontier.remove()
+    const node = pair[0]
     history.nodeHistory.push(node)
     
     if (node[0] === end) {
+      history.finalPath = pair[1]
       break
     }
 
@@ -193,9 +202,10 @@ const ucs = (begin, end, graph) => {
           // but it takes more work than just dequeue and enqueue
         const stack = []
         while (!frontier.empty()) {
-          const node = frontier.remove()
+          const pair = frontier.remove()
+          const node = pair[0]
           if (node[0] !== edge[0]) {
-            stack.push(node)
+            stack.push(pair)
           }
         }
 
@@ -204,7 +214,7 @@ const ucs = (begin, end, graph) => {
           frontier.insert(node)
         }
 
-        frontier.insert([edge[0], newWeight])
+        frontier.insert([[edge[0], newWeight], [...pair[1], [edge[0], newWeight]]])
         visited[edge[0]] = newWeight
       }
     })
