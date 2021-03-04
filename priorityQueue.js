@@ -1,5 +1,5 @@
 // Reference: https://blog.bitsrc.io/implementing-heaps-in-javascript-c3fbf1cb2e65
-class MinHeap {
+class PriorityQueue {
 
   constructor (compare = (node1, node2) => node1 < node2) {
       /* Initialing the array heap and adding a dummy element at index 0 */
@@ -7,7 +7,7 @@ class MinHeap {
       this.compare = compare
   }
 
-  getMin () {
+  getTop () {
       /* Accessing the min element at index 1 in the heap array */
       return this.heap[1]
   }
@@ -80,5 +80,9 @@ class MinHeap {
       }
 
       return smallest
+  }
+
+  empty() {
+    return this.heap.length <= 1
   }
 }

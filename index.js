@@ -187,6 +187,17 @@ const testSearch = () => {
 
   const dfsHistory = dfs('RIACHO_DAS_ALMAS', 'VITORIA_DE_SANTO_ANTAO', graph)
   console.log(dfsHistory)
+
+  const pq = new PriorityQueue((node1, node2) => node1[0] < node2[0])
+  pq.insert([3, 'muamba'])
+  pq.insert([1, 'aaa'])
+  pq.insert([4, 'bbbb'])
+  pq.insert([7, 'cccc'])
+
+  while (!pq.empty()) {
+    const node = pq.remove()
+    console.log(node)
+  }
 }
 
 testSearch()
