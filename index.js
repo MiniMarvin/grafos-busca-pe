@@ -235,10 +235,25 @@ const aStar = (begin, end, graph, costs) => {
 
 }
 
+/**
+ * Converte para uma forma normal de escrita. 
+ * @param {string} name 
+ */
+const commonName = (name) => {
+  return name.split('_').map(part => {
+    if (part.length > 2) {
+      return part.charAt(0).toUpperCase() + part.slice(1).toLocaleLowerCase()
+    }
+    return part.toLocaleLowerCase()
+  }).join(' ')
+}
 
 const testSearch = () => {
   const graph = buildGraphFromEdges(edges)
   console.log(graph)
+
+  const nomes = Object.keys(graph).map(name => commonName(name))
+  console.log(nomes)
   
   const bfsHistory = bfs('RIACHO_DAS_ALMAS', 'VITORIA_DE_SANTO_ANTAO', graph)
   console.log(bfsHistory)
