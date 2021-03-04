@@ -124,7 +124,34 @@ const bfs = (begin, end, graph) => {
  * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
  */
 const dfs = (begin, end, graph) => {
-  
+  const visited = {}
+  const frontier = [begin]
+  const history = {
+    frontiers: [],
+    visited: [],
+    nodeHistory: []
+  }
+
+  while (frontier.length > 0) {
+    history.frontiers.push(JSON.parse(JSON.stringify(frontier)))
+    history.visited.push(JSON.parse(JSON.stringify(visited)))
+
+    const node = frontier.pop()
+    visited[node] = 2
+
+    history.nodeHistory.push(node)
+    
+    if (node === end) {
+      break
+    }
+
+    graph[node].filter((edge) => !visited[edge[0]]).forEach((edge) => {
+      visited[edge[0]] = 1
+      frontier.push(edge[0])
+    })
+  }
+
+  return history
 }
 
 /**
@@ -157,6 +184,9 @@ const testSearch = () => {
   
   const bfsHistory = bfs('RIACHO_DAS_ALMAS', 'VITORIA_DE_SANTO_ANTAO', graph)
   console.log(bfsHistory)
+
+  const dfsHistory = dfs('RIACHO_DAS_ALMAS', 'VITORIA_DE_SANTO_ANTAO', graph)
+  console.log(dfsHistory)
 }
 
 testSearch()
