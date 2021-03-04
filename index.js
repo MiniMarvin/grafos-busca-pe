@@ -162,7 +162,55 @@ const dfs = (begin, end, graph) => {
  * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
  */
 const ucs = (begin, end, graph) => {
-  
+  const visited = {}
+  const frontier = new PriorityQueue((node1, node2) => node1[1] < node2[1])
+  frontier.insert([begin, 0])
+  const history = {
+    frontiers: [],
+    visited: [],
+    nodeHistory: []
+  }
+
+  visited[begin] = 0
+
+  while (!frontier.empty()) {
+    history.frontiers.push(JSON.parse(JSON.stringify(frontier.heap.slice(1))))
+    history.visited.push(JSON.parse(JSON.stringify(visited)))
+
+    const node = frontier.remove()
+    history.nodeHistory.push(node)
+    
+    if (node[0] === end) {
+      break
+    }
+
+    graph[node[0]].forEach((edge) => {
+      const newWeight = node[1] + edge[1]
+
+      if (visited[edge[0]] === null || visited[edge[0]] === undefined 
+        || (visited[edge[0]] && newWeight < visited[edge[0]])) {
+          // dequeu and enqueue the entire frontier, the ideal would be to implement a replace method in the heap, 
+          // but it takes more work than just dequeue and enqueue
+        const stack = []
+        while (!frontier.empty()) {
+          const node = frontier.remove()
+          if (node[0] !== edge[0]) {
+            stack.push(node)
+          }
+        }
+
+        while (stack.length > 0) {
+          const node = stack.pop()
+          frontier.insert(node)
+        }
+
+        frontier.insert([edge[0], newWeight])
+        visited[edge[0]] = newWeight
+      }
+    })
+  }
+
+  return history
 }
 
 /**
@@ -180,24 +228,27 @@ const aStar = (begin, end, graph, costs) => {
 
 const testSearch = () => {
   const graph = buildGraphFromEdges(edges)
-  // console.log(graph)
+  console.log(graph)
   
   const bfsHistory = bfs('RIACHO_DAS_ALMAS', 'VITORIA_DE_SANTO_ANTAO', graph)
   console.log(bfsHistory)
 
   const dfsHistory = dfs('RIACHO_DAS_ALMAS', 'VITORIA_DE_SANTO_ANTAO', graph)
   console.log(dfsHistory)
-
+  
   const pq = new PriorityQueue((node1, node2) => node1[0] < node2[0])
   pq.insert([3, 'muamba'])
   pq.insert([1, 'aaa'])
   pq.insert([4, 'bbbb'])
   pq.insert([7, 'cccc'])
-
+  
   while (!pq.empty()) {
     const node = pq.remove()
     console.log(node)
   }
+
+  const ucsHistory = ucs('RIACHO_DAS_ALMAS', 'VITORIA_DE_SANTO_ANTAO', graph)
+  console.log(ucsHistory)
 }
 
 testSearch()
