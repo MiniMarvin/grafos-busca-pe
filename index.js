@@ -259,18 +259,11 @@ const ucs = (begin, end, graph) => {
     });
   }
 
+  history.nodeHistory = history.nodeHistory.map(a => a[0])
+  history.finalPath = history.finalPath.map(a => a[0])
+
   return history;
 };
-
-/**
- * Realiza uma busca em A* sobre um grafo.
- *
- * @param {string} begin O nó de inicio da busca.
- * @param {string} end O nó de fim da busca.
- * @param {{string: any[]}} graph O grafo representado como lista de adjacência em que se deve buscar.
- * @param {{string: number}} costs A lista de custo heurístico de cada nó.
- */
-const aStar = (begin, end, graph, costs) => {};
 
 /**
  * Converte para uma forma normal de escrita.
@@ -287,33 +280,3 @@ const commonName = (name) => {
     })
     .join(" ");
 };
-
-const testSearch = () => {
-  const graph = buildGraphFromEdges(edges);
-  console.log(graph);
-
-  const nomes = Object.keys(graph).map((name) => commonName(name));
-  console.log(nomes);
-
-  const bfsHistory = bfs("GRAVATA", "VITORIA", graph);
-  console.log(bfsHistory);
-
-  const dfsHistory = dfs("GRAVATA", "VITORIA", graph);
-  console.log(dfsHistory);
-
-  const pq = new PriorityQueue((node1, node2) => node1[0] < node2[0]);
-  pq.insert([3, "muamba"]);
-  pq.insert([1, "aaa"]);
-  pq.insert([4, "bbbb"]);
-  pq.insert([7, "cccc"]);
-
-  while (!pq.empty()) {
-    const node = pq.remove();
-    console.log(node);
-  }
-
-  const ucsHistory = ucs("GRAVATA", "VITORIA", graph);
-  console.log(ucsHistory);
-};
-
-testSearch();

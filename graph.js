@@ -1,14 +1,24 @@
 // Preencher as opções dos selectors
-const new_options = nodes.map((node) => {
+const cities_options = nodes.map((node) => {
   return node[0];
 });
-for (opt of new_options) {
+
+for (opt of cities_options) {
   var option_from = document.createElement("option");
   option_from.text = opt;
+
   var option_to = document.createElement("option");
   option_to.text = opt;
+
   document.getElementById("from").add(option_from);
   document.getElementById("to").add(option_to);
+}
+
+algorithms_options = ['BFS', 'DFS', 'Djikstra (USC)']
+for (opt of algorithms_options) {
+  var option_from = document.createElement("option");
+  option_from.text = opt;
+  document.getElementById("algorithm").add(option_from);
 }
 
 // Inicialização do espaço de desenhar
@@ -25,7 +35,7 @@ function addNode(node) {
   node_name = node[0];
   // Creates circle at x = 50, y = 40, with radius 10
   var circle = paper.circle(x, y, 10);
-  circle.attr("fill", "#f00");
+  circle.attr("fill", "#fd3a69");
   circle.attr("stroke", "#fff");
   var t = paper.text(x, y + 15, commonName(node_name));
 
@@ -45,16 +55,39 @@ for (edge of edges) {
 function calculate() {
   const from = document.getElementById("from").value;
   const to = document.getElementById("to").value;
+  const algorithm = document.getElementById("algorithm").value;
 
   const graph = buildGraphFromEdges(edges);
-  console.log("BFS:");
-  const history = bfs(from, to, graph);
-  console.log(history);
-  const finalPath = history.finalPath;
-  for (key in r_nodes) {
-    r_nodes[key].attr("fill", "#f00");
+
+  if (algorithm == 'DFS') {
+    var history = dfs(from, to, graph);
+  } else if (algorithm == 'Djikstra (USC)') {
+    var history = ucs(from, to, graph);
+  } else {
+    var history = bfs(from, to, graph);
   }
-  for (city of finalPath) {
-    r_nodes[city].attr("fill", "#00f");
+
+  console.log(history)
+
+  for (key in r_nodes) {
+    r_nodes[key].attr("fill", "#fd3a69");
+  }
+
+  const finalPath = history.finalPath;
+  const list_of_cities = history.nodeHistory;
+
+  console.log(finalPath)
+  console.log(list_of_cities)
+
+  for(var j = 0; j < list_of_cities.length; j++) {
+      var element = r_nodes[list_of_cities[j]]
+      var finalAnimation = Raphael.animation({'fill': '#120078'}, 500)
+      var intermediateAnimation = Raphael.animation({'fill': '#FF86A0'}, 500)
+
+      element.animate(finalAnimation.delay(1000*j))
+
+      if(!(finalPath.includes(list_of_cities[j]))) {
+        element.animate(intermediateAnimation.delay(1000*j + 1200))
+      }
   }
 }
