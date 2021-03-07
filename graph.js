@@ -1,3 +1,4 @@
+// Preencher as opções dos selectors
 const new_options = nodes.map((node) => {
   return node[0];
 });
@@ -10,13 +11,14 @@ for (opt of new_options) {
   document.getElementById("to").add(option_to);
 }
 
+// Inicialização do espaço de desenhar
 width = 1000;
 height = 600;
 
-r_nodes = {};
 var paper = Raphael("canvas", width, height);
-// var c = paper.image("pernambuco.png", 0, 0, width, height);
 
+// Preenchimento dos nós
+r_nodes = {};
 function addNode(node) {
   x = (width * (node[1] - 50)) / 100;
   y = (height * node[2]) / 100;
@@ -34,10 +36,12 @@ for (node of nodes) {
   addNode(node);
 }
 
+// Conexões entre nós
 for (edge of edges) {
   paper.connection(r_nodes[edge[0]], r_nodes[edge[1]]);
 }
 
+// Função para mostrar o resultado da BFS
 function calculate() {
   const from = document.getElementById("from").value;
   const to = document.getElementById("to").value;
