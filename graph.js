@@ -1,18 +1,14 @@
-// var g = new Dracula.Graph();
-
-// for (edge of edges) {
-//   g.addEdge(commonName(edge[0]), commonName(edge[1]), {
-//     label: edge[2],
-//   });
-// }
-
-// var layouter = new Dracula.Layout.Spring(g);
-// layouter.layout();
-
-// var renderer = new Dracula.Renderer.Raphael("#canvas", g, 1000, 600);
-// renderer.draw();
-
-// Creates canvas 320 × 200 at 10, 50
+const new_options = nodes.map((node) => {
+  return node[0];
+});
+for (opt of new_options) {
+  var option_from = document.createElement("option");
+  option_from.text = opt;
+  var option_to = document.createElement("option");
+  option_to.text = opt;
+  document.getElementById("from").add(option_from);
+  document.getElementById("to").add(option_to);
+}
 
 width = 1000;
 height = 600;
@@ -42,5 +38,19 @@ for (edge of edges) {
   paper.connection(r_nodes[edge[0]], r_nodes[edge[1]]);
 }
 
-// paper.connection(circle, shapes[2], "#000", "#fff|5");
-// var t = paper.text(50, 50, "Raphaël\nkicks\nbutt!");
+function calculate() {
+  const from = document.getElementById("from").value;
+  const to = document.getElementById("to").value;
+
+  const graph = buildGraphFromEdges(edges);
+  console.log("BFS:");
+  const history = bfs(from, to, graph);
+  console.log(history);
+  const finalPath = history.finalPath;
+  for (key in r_nodes) {
+    r_nodes[key].attr("fill", "#f00");
+  }
+  for (city of finalPath) {
+    r_nodes[city].attr("fill", "#00f");
+  }
+}

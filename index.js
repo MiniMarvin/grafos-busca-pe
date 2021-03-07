@@ -295,10 +295,10 @@ const testSearch = () => {
   const nomes = Object.keys(graph).map((name) => commonName(name));
   console.log(nomes);
 
-  const bfsHistory = bfs("RIACHO_DAS_ALMAS", "VITORIA_DE_SANTO_ANTAO", graph);
+  const bfsHistory = bfs("GRAVATA", "VITORIA", graph);
   console.log(bfsHistory);
 
-  const dfsHistory = dfs("RIACHO_DAS_ALMAS", "VITORIA_DE_SANTO_ANTAO", graph);
+  const dfsHistory = dfs("GRAVATA", "VITORIA", graph);
   console.log(dfsHistory);
 
   const pq = new PriorityQueue((node1, node2) => node1[0] < node2[0]);
@@ -312,7 +312,7 @@ const testSearch = () => {
     console.log(node);
   }
 
-  const ucsHistory = ucs("RIACHO_DAS_ALMAS", "VITORIA_DE_SANTO_ANTAO", graph);
+  const ucsHistory = ucs("GRAVATA", "VITORIA", graph);
   console.log(ucsHistory);
 };
 
