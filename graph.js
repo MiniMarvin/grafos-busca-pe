@@ -6,10 +6,12 @@ cities_options.sort();
 
 for (opt of cities_options) {
   var option_from = document.createElement("option");
-  option_from.text = opt;
+  option_from.text = commonName(opt);
+  option_from.value = opt;
 
   var option_to = document.createElement("option");
-  option_to.text = opt;
+  option_to.text = commonName(opt);
+  option_to.value = opt;
 
   document.getElementById("from").add(option_from);
   document.getElementById("to").add(option_to);
@@ -77,18 +79,27 @@ function calculate() {
   const finalPath = history.finalPath;
   const list_of_cities = history.nodeHistory;
 
-  console.log(finalPath);
-  console.log(list_of_cities);
+  cleanSteps();
+  cleanFrontiers();
 
   for (var j = 0; j < list_of_cities.length; j++) {
+    const city = list_of_cities[j];
     var element = r_nodes[list_of_cities[j]];
-    var finalAnimation = Raphael.animation({ fill: "#120078" }, 500);
+    let updateSteps = () => addToSteps(city);
+    if (j == list_of_cities.length-1) {
+      updateSteps = () => showFinalPath(finalPath);
+    }
+    const frontiers = history.frontiers[j];
+    const callback = () => {
+      updateSteps();
+      showFrontiers(frontiers);
+    };
+    var finalAnimation = Raphael.animation({ fill: "#120078" }, 500, callback);
     var intermediateAnimation = Raphael.animation({ fill: "#FF86A0" }, 500);
-
     element.animate(finalAnimation.delay(1000 * j));
 
     if (!finalPath.includes(list_of_cities[j])) {
-      element.animate(intermediateAnimation.delay(1000 * j + 1200));
+      element.animate(intermediateAnimation.delay(1000 * j + 1200))
     }
   }
 }
