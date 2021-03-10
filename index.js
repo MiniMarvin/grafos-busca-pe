@@ -13,7 +13,7 @@ const nodes = [
   ["BEZERROS", 82, 38],
   ["SAIRE", 85.5, 42],
   ["GRAVATA", 86, 36],
-  ["PASSIRA", 86, 25],
+  ["PASSIRA", 85, 26],
   ["POMBOS", 90, 35],
   ["VITORIA", 94, 32],
   ["PAUDALHO", 96, 16],
@@ -23,8 +23,11 @@ const nodes = [
   ["JABOATAO_DOS_GUARARAPES", 104, 40],
   ["OLINDA", 104.5, 25],
   ["LIMOEIRO", 89, 18],
+  ["SURUBIM", 81, 10],
 ];
 const edges = [
+  ["SURUBIM", "LIMOEIRO", 45],
+  ["SURUBIM", "VERTENTES", 25],
   ["SAO_LOURENCO", "PAUDALHO", 24],
   ["FREI_MIGUELINHO", "CARUARU", 64],
   ["TORITAMA", "CARUARU", 36],
@@ -45,9 +48,8 @@ const edges = [
   ["AGRESTINA", "BEZERROS", 50],
   ["BEZERROS", "SAIRE", 15],
   ["BEZERROS", "GRAVATA", 21],
-  ["BEZERROS", "PASSIRA", 50],
-  ["FREI_MIGUELINHO", "PASSIRA", 68],
-  ["PASSIRA", "GRAVATA", 50],
+∂  ["FREI_MIGUELINHO", "PASSIRA", 68],
+  ["PASSIRA", "BEZERROS", 49],
   ["PASSIRA", "POMBOS", 65],
   ["GRAVATA", "POMBOS", 23],
   ["POMBOS", "VITORIA", 16],
@@ -73,12 +75,11 @@ const addToStack = (city, stack) => {
   td.innerText = commonName(city);
   tr.appendChild(td);
   document.getElementById(stack).appendChild(tr);
-}
+};
 
-const addToSteps = (city) => addToStack(city, 'steps');
+const addToSteps = (city) => addToStack(city, "steps");
 
-const addToFrontiers = (city) => addToStack(city, 'frontiers');
-
+const addToFrontiers = (city) => addToStack(city, "frontiers");
 
 /**
  * Remove uma cidade na pilha de paços.
@@ -92,7 +93,7 @@ const removeFromStack = (city) => {
   const stack = document.getElementById("steps");
   const child = document.getElementById(`steps-${city}`);
   stack.removeChild(child);
-}
+};
 
 /**
  * Limpa a pilha escolhida.
@@ -104,12 +105,12 @@ const cleanStack = async (stack, title) => {
   const steps = document.getElementById(stack);
   const header = document.getElementById(`${stack}-header`);
   header.innerHTML = title;
-  steps.innerHTML = '';
+  steps.innerHTML = "";
   steps.appendChild(header);
-}
+};
 
-const cleanSteps = () => cleanStack('steps', 'Nós visitados:');
-const cleanFrontiers = () => cleanStack('frontiers', 'Próximas visitas:');
+const cleanSteps = () => cleanStack("steps", "Nós visitados:");
+const cleanFrontiers = () => cleanStack("frontiers", "Próximas visitas:");
 
 /**
  * Mostra todo melhor caminho.
@@ -119,12 +120,12 @@ const cleanFrontiers = () => cleanStack('frontiers', 'Próximas visitas:');
 const showFinalPath = async (cities) => {
   await cleanSteps();
   const header = document.getElementById("steps-header");
-  header.innerText = 'Melhor caminho:';
+  header.innerText = "Melhor caminho:";
   console.log(cities);
   for (city of cities) {
     addToSteps(city);
   }
-}
+};
 
 /**
  * Mostra a lista de próximas fronteiras.
@@ -134,13 +135,12 @@ const showFinalPath = async (cities) => {
 const showFrontiers = async (cities) => {
   await cleanFrontiers();
   const header = document.getElementById("frontiers-header");
-  header.innerText = 'Próximas visitas:';
-  console.log('cities', cities);
+  header.innerText = "Próximas visitas:";
+  console.log("cities", cities);
   for (city of cities) {
     addToFrontiers(city);
   }
-}
-
+};
 
 /**
  * Constrói uma lista de adjacência com base em arestas do tipo [string, string, int].
