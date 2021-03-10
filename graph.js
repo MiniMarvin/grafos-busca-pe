@@ -2,19 +2,22 @@
 const cities_options = nodes.map((node) => {
   return node[0];
 });
+cities_options.sort();
 
 for (opt of cities_options) {
   var option_from = document.createElement("option");
-  option_from.text = opt;
+  option_from.text = commonName(opt);
+  option_from.value = opt;
 
   var option_to = document.createElement("option");
-  option_to.text = opt;
+  option_to.text = commonName(opt);
+  option_to.value = opt;
 
   document.getElementById("from").add(option_from);
   document.getElementById("to").add(option_to);
 }
 
-algorithms_options = ['BFS', 'DFS', 'Djikstra (USC)']
+algorithms_options = ["BFS", "DFS", "Djikstra (USC)"];
 for (opt of algorithms_options) {
   var option_from = document.createElement("option");
   option_from.text = opt;
@@ -59,15 +62,15 @@ function calculate() {
 
   const graph = buildGraphFromEdges(edges);
 
-  if (algorithm == 'DFS') {
+  if (algorithm == "DFS") {
     var history = dfs(from, to, graph);
-  } else if (algorithm == 'Djikstra (USC)') {
+  } else if (algorithm == "Djikstra (USC)") {
     var history = ucs(from, to, graph);
   } else {
     var history = bfs(from, to, graph);
   }
 
-  console.log(history)
+  console.log(history);
 
   for (key in r_nodes) {
     r_nodes[key].attr("fill", "#fd3a69");
@@ -76,18 +79,27 @@ function calculate() {
   const finalPath = history.finalPath;
   const list_of_cities = history.nodeHistory;
 
-  console.log(finalPath)
-  console.log(list_of_cities)
+  cleanSteps();
+  cleanFrontiers();
 
-  for(var j = 0; j < list_of_cities.length; j++) {
-      var element = r_nodes[list_of_cities[j]]
-      var finalAnimation = Raphael.animation({'fill': '#120078'}, 500)
-      var intermediateAnimation = Raphael.animation({'fill': '#FF86A0'}, 500)
+  for (var j = 0; j < list_of_cities.length; j++) {
+    const city = list_of_cities[j];
+    var element = r_nodes[list_of_cities[j]];
+    let updateSteps = () => addToSteps(city);
+    if (j == list_of_cities.length-1) {
+      updateSteps = () => showFinalPath(finalPath);
+    }
+    const frontiers = history.frontiers[j];
+    const callback = () => {
+      updateSteps();
+      showFrontiers(frontiers);
+    };
+    var finalAnimation = Raphael.animation({ fill: "#120078" }, 500, callback);
+    var intermediateAnimation = Raphael.animation({ fill: "#FF86A0" }, 500);
+    element.animate(finalAnimation.delay(1000 * j));
 
-      element.animate(finalAnimation.delay(1000*j))
-
-      if(!(finalPath.includes(list_of_cities[j]))) {
-        element.animate(intermediateAnimation.delay(1000*j + 1200))
-      }
+    if (!finalPath.includes(list_of_cities[j])) {
+      element.animate(intermediateAnimation.delay(1000 * j + 1200))
+    }
   }
 }

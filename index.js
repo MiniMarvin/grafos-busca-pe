@@ -4,10 +4,10 @@ const nodes = [
   ["CARUARU", 77, 40],
   ["RECIFE", 105, 32],
   ["FREI_MIGUELINHO", 78, 25],
-  ["TORITAMA", 72, 23],
+  ["TORITAMA", 70, 23],
   ["SAO_CAETANO", 70, 42],
   ["BREJO_DA_MADRE_DE_DEUS", 65, 35],
-  ["VERTENTES", 78, 12],
+  ["VERTENTES", 75, 16],
   ["ALTINHO", 73, 50],
   ["AGRESTINA", 77, 50],
   ["BEZERROS", 82, 38],
@@ -16,25 +16,37 @@ const nodes = [
   ["PASSIRA", 86, 25],
   ["POMBOS", 90, 35],
   ["VITORIA", 94, 32],
+  ["PAUDALHO", 96, 16],
+  ["GLORIA_DE_GOITA", 93, 24],
   ["MORENO", 99, 33],
   ["SAO_LOURENCO", 99, 25],
   ["JABOATAO_DOS_GUARARAPES", 104, 40],
   ["OLINDA", 104.5, 25],
+  ["LIMOEIRO", 89, 18],
 ];
 const edges = [
-  ["TAQUARITINGA_DO_NORTE", "CARUARU", 59],
+  ["SAO_LOURENCO", "PAUDALHO", 24],
   ["FREI_MIGUELINHO", "CARUARU", 64],
   ["TORITAMA", "CARUARU", 36],
   ["SAO_CAETANO", "CARUARU", 23],
   ["BREJO_DA_MADRE_DE_DEUS", "CARUARU", 67],
-  ["VERTENTES", "CARUARU", 50],
+  ["VERTENTES", "FREI_MIGUELINHO", 16],
+  ["VERTENTES", "TAQUARITINGA_DO_NORTE", 10],
+  ["GLORIA_DE_GOITA", "PAUDALHO", 26],
+  ["GLORIA_DE_GOITA", "VITORIA", 25],
+  ["GLORIA_DE_GOITA", "LIMOEIRO", 24],
+  ["PASSIRA", "LIMOEIRO", 25],
+  ["VERTENTES", "TORITAMA", 16],
+  ["LIMOEIRO", "PAUDALHO", 36],
   ["ALTINHO", "CARUARU", 34],
   ["CARUARU", "AGRESTINA", 22],
+  ["GRAVATA", "SAIRE", 20],
   ["CARUARU", "BEZERROS", 33],
   ["AGRESTINA", "BEZERROS", 50],
   ["BEZERROS", "SAIRE", 15],
   ["BEZERROS", "GRAVATA", 21],
   ["BEZERROS", "PASSIRA", 50],
+  ["FREI_MIGUELINHO", "PASSIRA", 68],
   ["PASSIRA", "GRAVATA", 50],
   ["PASSIRA", "POMBOS", 65],
   ["GRAVATA", "POMBOS", 23],
@@ -43,36 +55,92 @@ const edges = [
   ["VITORIA", "SAO_LOURENCO", 51],
   ["MORENO", "SAO_LOURENCO", 31],
   ["MORENO", "JABOATAO_DOS_GUARARAPES", 27],
-  ["SAO_LOURENCO", "JABOATAO_DOS_GUARARAPES", 32],
   ["SAO_LOURENCO", "RECIFE", 24],
   ["JABOATAO_DOS_GUARARAPES", "RECIFE", 19],
   ["RECIFE", "OLINDA", 6],
   ["MORENO", "RECIFE", 16],
 ];
 
-const costs = {
-  TAQUARITINGA_DO_NORTE: 41,
-  FREI_MIGUELINHO: 37,
-  TORITAMA: 31,
-  SAO_CAETANO: 20,
-  BREJO_DA_MADRE_DE_DEUS: 45,
-  VERTENTES: 41,
-  CARUARU: 0,
-  ALTINHO: 25,
-  RIACHO_DAS_ALMAS: 19,
-  AGRESTINA: 20,
-  BEZERROS: 27,
-  SAIRE: 30,
-  PASSIRA: 55,
-  GRAVATA: 46,
-  POMBOS: 66,
-  VITORIA_DE_SANTO_ANTAO: 78,
-  MORENO: 98,
-  SAO_LOURENCO_DA_MATA: 110,
-  JABOATAO_DOS_GUARARAPES: 114,
-  RECIFE: 124,
-  OLINDA: 128,
-};
+/**
+ * Adiciona uma cidade na pilha.
+ *
+ * @param {string} city Arestas do grafo com os pesos.
+ */
+const addToStack = (city, stack) => {
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  tr.id = `${stack}-${city}`;
+  td.innerText = commonName(city);
+  tr.appendChild(td);
+  document.getElementById(stack).appendChild(tr);
+}
+
+const addToSteps = (city) => addToStack(city, 'steps');
+
+const addToFrontiers = (city) => addToStack(city, 'frontiers');
+
+
+/**
+ * Remove uma cidade na pilha de paços.
+ *
+ * @param {string} city Arestas do grafo com os pesos.
+ */
+const removeFromStack = (city) => {
+  // const tr = document.createElement("tr");
+  // tr.appendChild(document.createElement("td"))
+  // tr.id = city;
+  const stack = document.getElementById("steps");
+  const child = document.getElementById(`steps-${city}`);
+  stack.removeChild(child);
+}
+
+/**
+ * Limpa a pilha escolhida.
+ *
+ * @param {string} stack Nome da stack.
+ * @param {string} title Titulo da pilha.
+ */
+const cleanStack = async (stack, title) => {
+  const steps = document.getElementById(stack);
+  const header = document.getElementById(`${stack}-header`);
+  header.innerHTML = title;
+  steps.innerHTML = '';
+  steps.appendChild(header);
+}
+
+const cleanSteps = () => cleanStack('steps', 'Nós visitados:');
+const cleanFrontiers = () => cleanStack('frontiers', 'Próximas visitas:');
+
+/**
+ * Mostra todo melhor caminho.
+ *
+ * @param {string[]} cities lista de cidades do melhor caminho.
+ */
+const showFinalPath = async (cities) => {
+  await cleanSteps();
+  const header = document.getElementById("steps-header");
+  header.innerText = 'Melhor caminho:';
+  console.log(cities);
+  for (city of cities) {
+    addToSteps(city);
+  }
+}
+
+/**
+ * Mostra a lista de próximas fronteiras.
+ *
+ * @param {string[]} cities lista de cidades do melhor caminho.
+ */
+const showFrontiers = async (cities) => {
+  await cleanFrontiers();
+  const header = document.getElementById("frontiers-header");
+  header.innerText = 'Próximas visitas:';
+  console.log('cities', cities);
+  for (city of cities) {
+    addToFrontiers(city);
+  }
+}
+
 
 /**
  * Constrói uma lista de adjacência com base em arestas do tipo [string, string, int].
@@ -259,8 +327,8 @@ const ucs = (begin, end, graph) => {
     });
   }
 
-  history.nodeHistory = history.nodeHistory.map(a => a[0])
-  history.finalPath = history.finalPath.map(a => a[0])
+  history.nodeHistory = history.nodeHistory.map((a) => a[0]);
+  history.finalPath = history.finalPath.map((a) => a[0]);
 
   return history;
 };
