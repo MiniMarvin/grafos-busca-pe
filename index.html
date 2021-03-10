@@ -1,10 +1,12 @@
 <html>
   <head>
+    <link rel="stylesheet" href="style.css">
     <title>Busca em Grafo PE</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.1/raphael.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/graphdracula/1.0.3/dracula.min.js"></script>
     <script src="priorityQueue.js"></script>
     <script src="index.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
 
   <body>
@@ -14,6 +16,20 @@
     <select name="To" id="to"></select>
     <select name="Algorithm" id="algorithm"></select>
     <button type="button" onclick="calculate()">Calcular!</button>
+    <table id="steps">
+      <tr id="steps-header">
+        <th style="text-align: start">
+          
+        </th>
+      </tr>
+    </table>
+    <table id="frontiers">
+      <tr id="frontiers-header">
+        <th style="text-align: start">
+          
+        </th>
+      </tr>
+    </table>
     <script src="graph.js"></script>
   </body>
 </html>

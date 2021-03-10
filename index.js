@@ -62,6 +62,87 @@ const edges = [
 ];
 
 /**
+ * Adiciona uma cidade na pilha.
+ *
+ * @param {string} city Arestas do grafo com os pesos.
+ */
+const addToStack = (city, stack) => {
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  tr.id = `${stack}-${city}`;
+  td.innerText = commonName(city);
+  tr.appendChild(td);
+  document.getElementById(stack).appendChild(tr);
+}
+
+const addToSteps = (city) => addToStack(city, 'steps');
+
+const addToFrontiers = (city) => addToStack(city, 'frontiers');
+
+
+/**
+ * Remove uma cidade na pilha de paços.
+ *
+ * @param {string} city Arestas do grafo com os pesos.
+ */
+const removeFromStack = (city) => {
+  // const tr = document.createElement("tr");
+  // tr.appendChild(document.createElement("td"))
+  // tr.id = city;
+  const stack = document.getElementById("steps");
+  const child = document.getElementById(`steps-${city}`);
+  stack.removeChild(child);
+}
+
+/**
+ * Limpa a pilha escolhida.
+ *
+ * @param {string} stack Nome da stack.
+ * @param {string} title Titulo da pilha.
+ */
+const cleanStack = async (stack, title) => {
+  const steps = document.getElementById(stack);
+  const header = document.getElementById(`${stack}-header`);
+  header.innerHTML = title;
+  steps.innerHTML = '';
+  steps.appendChild(header);
+}
+
+const cleanSteps = () => cleanStack('steps', 'Nós visitados:');
+const cleanFrontiers = () => cleanStack('frontiers', 'Próximas visitas:');
+
+/**
+ * Mostra todo melhor caminho.
+ *
+ * @param {string[]} cities lista de cidades do melhor caminho.
+ */
+const showFinalPath = async (cities) => {
+  await cleanSteps();
+  const header = document.getElementById("steps-header");
+  header.innerText = 'Melhor caminho:';
+  console.log(cities);
+  for (city of cities) {
+    addToSteps(city);
+  }
+}
+
+/**
+ * Mostra a lista de próximas fronteiras.
+ *
+ * @param {string[]} cities lista de cidades do melhor caminho.
+ */
+const showFrontiers = async (cities) => {
+  await cleanFrontiers();
+  const header = document.getElementById("frontiers-header");
+  header.innerText = 'Próximas visitas:';
+  console.log('cities', cities);
+  for (city of cities) {
+    addToFrontiers(city);
+  }
+}
+
+
+/**
  * Constrói uma lista de adjacência com base em arestas do tipo [string, string, int].
  *
  * @param {any[]} edges Arestas do grafo com os pesos.
