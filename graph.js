@@ -1,3 +1,5 @@
+const BASE_TIME = 3000;
+
 // Preencher as opções dos selectors
 const cities_options = nodes.map((node) => {
   return node[0];
@@ -94,12 +96,23 @@ function calculate() {
       updateSteps();
       showFrontiers(frontiers);
     };
-    var finalAnimation = Raphael.animation({ fill: "#120078" }, 500, callback);
-    var intermediateAnimation = Raphael.animation({ fill: "#FF86A0" }, 500);
-    element.animate(finalAnimation.delay(1000 * j));
+    var finalAnimation = Raphael.animation({ fill: "#120078" }, 200, callback);
+    var intermediateAnimation = Raphael.animation({ fill: "#FF86A0" }, 200);
+    var nextAnimation = Raphael.animation({ fill: "#AEE63E" }, 200);
+
+    const step = BASE_TIME * j;
+
+    element.animate(finalAnimation.delay(step));
 
     if (!finalPath.includes(list_of_cities[j])) {
-      element.animate(intermediateAnimation.delay(1000 * j + 1200))
+      element.animate(intermediateAnimation.delay(step + 2000));
     }
+    frontiers.forEach(city=>{
+      const el = r_nodes[city];
+      const prevCollor = el.attrs.fill;
+      el.animate(nextAnimation.delay(step - 2000)); //paint for next
+      var backToPrevColor = Raphael.animation({ fill: prevCollor }, 200);
+      el.animate(backToPrevColor.delay(step - 1000)); // back to initial collor
+    });
   }
 }
